@@ -12,7 +12,7 @@ from os import path
 import csv
 import time
 
-import path_helpers as ph
+import pathhelper as ph
 
 def read_pdf(pdf_file):
     resource_manager = PDFResourceManager()
