@@ -8,26 +8,35 @@ import configparser
 import time
 from datetime import date, timedelta
 import os
+import codecs
 
 
 CONFIG  = "c.conf"
 
 def get_target_file_path():
     c = configparser.ConfigParser()
-    c.read(CONFIG)
+
+    #c.read(CONFIG)
+    c.readfp(codecs.open(CONFIG, "r", "utf-8-sig"))
+
     base_dir = c.get("path", "base_directory")
 
     today = date.today().strftime("%Y%m%d")
     tomorrow = (date.today() + timedelta(1)).strftime("%Y%m%d")
 
+    str_date = today
+    if int(time.strftime("%H")) < 12:
+        str_date = today
+    else:
+        str_date = tomorrow
+
     parent_parent = os.path.dirname(os.path.dirname(os.path.abspath('.')))
 
-    path = os.path.join(parent_parent, base_dir, today)
+    path = os.path.join(parent_parent, base_dir, str_date)
     if not os.path.exists(path):
         os.makedirs(path)
 
-    file_path = os.path.join(parent_parent, base_dir, today, today + ".csv")
-
+    file_path = os.path.join(parent_parent, base_dir, str_date, str_date + ".csv")
     return file_path
 
 
@@ -155,13 +164,15 @@ def get_all_and_save():
         pdfs = get_all_pdfs()
         save_to_csv(pdfs)
     """
+    file_path = get_target_file_path()
+    print("csv file path is [%s]" % file_path)
     print("begin to get disclosures...")
     disclosures = get_sse_disclosure()
     print("got disclosures of sse...")
     szse = get_szse_disclosure()
     print("got disclosures of szse...")
     disclosures.extend(szse)
-    with open( get_target_file_path(), "w", encoding="utf-8", newline="") as csv_file:
+    with open( file_path, "w", encoding="utf-8", newline="") as csv_file:
         csv_writer = csv.writer(csv_file)
         for d in disclosures:
             csv_writer.writerow(d)
@@ -171,7 +182,6 @@ def get_all_and_save():
 
 if __name__ == "__main__":
     get_all_and_save()
-
 
 
 #end
