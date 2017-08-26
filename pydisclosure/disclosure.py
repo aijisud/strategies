@@ -1,4 +1,4 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 import requests
 from lxml import etree
 from lxml import html
@@ -7,40 +7,11 @@ import csv
 import configparser
 import time
 from datetime import date, timedelta
-import os
 import codecs
 
+import path_helpers as ph
 
-CONFIG  = "c.conf"
-
-def get_target_file_path():
-    c = configparser.ConfigParser()
-
-    #c.read(CONFIG)
-    c.readfp(codecs.open(CONFIG, "r", "utf-8-sig"))
-
-    base_dir = c.get("path", "base_directory")
-
-    today = date.today().strftime("%Y%m%d")
-    tomorrow = (date.today() + timedelta(1)).strftime("%Y%m%d")
-
-    str_date = today
-    if int(time.strftime("%H")) < 12:
-        str_date = today
-    else:
-        str_date = tomorrow
-
-    parent_parent = os.path.dirname(os.path.dirname(os.path.abspath('.')))
-
-    path = os.path.join(parent_parent, base_dir, str_date)
-    if not os.path.exists(path):
-        os.makedirs(path)
-
-    file_path = os.path.join(parent_parent, base_dir, str_date, str_date + ".csv")
-    return file_path
-
-
-def get_sse_disclosure():
+def get_sse_disclosures():
 
     base_url = "http://www.sse.com.cn/disclosure/listedinfo/announcement/"
     base_url_post = "http://www.sse.com.cn/disclosure/listedinfo/announcement/s_docdatesort_desc_2016openpdf.htm"
@@ -86,7 +57,7 @@ def get_sse_disclosure():
 
     return (disclosures)
 
-def get_szse_disclosure():
+def get_szse_disclosures():
 
     pdf_base_url = "http://www.cninfo.com.cn/"
     base_url_post = "http://www.cninfo.com.cn/cninfo-new/disclosure/szse_latest"
@@ -144,19 +115,20 @@ def get_szse_disclosure():
 
     return (disclosures)
 
-def get_all_pdfs():
-    disclosures = get_sse_disclosure()
-    szse = get_szse_disclosure()
+def __get_all_pdfs():
+    disclosures = get_szse_disclosures()
+    szse = get_szse_disclosures()
     disclosures.extend(szse)
     return disclosures
 
-def save_to_csv(data_list):
-    with open( get_target_file_path(), "w", encoding="utf-8", newline="") as csv_file:
+def __save_to_csv(data_list):
+    file_path = ph.get_csv_file_path()
+    with open( file_path, "w", encoding="utf-8", newline="") as csv_file:
         csv_writer = csv.writer(csv_file)
         for data in data_list:
             csv_writer.writerow(data)
 
-def get_all_and_save():
+def save_to_csv(file_path):
     """
     get_all_pdfs()
     save_to_csv()
@@ -164,12 +136,14 @@ def get_all_and_save():
         pdfs = get_all_pdfs()
         save_to_csv(pdfs)
     """
-    file_path = get_target_file_path()
+    if file_path == "":
+        file_path = ph.get_csv_file_path()
+
     print("csv file path is [%s]" % file_path)
     print("begin to get disclosures...")
-    disclosures = get_sse_disclosure()
+    disclosures = get_sse_disclosures()
     print("got disclosures of sse...")
-    szse = get_szse_disclosure()
+    szse = get_szse_disclosures()
     print("got disclosures of szse...")
     disclosures.extend(szse)
     with open( file_path, "w", encoding="utf-8", newline="") as csv_file:
@@ -181,7 +155,8 @@ def get_all_and_save():
 
 
 if __name__ == "__main__":
-    get_all_and_save()
+    save_to_csv("")
+
 
 
 #end
