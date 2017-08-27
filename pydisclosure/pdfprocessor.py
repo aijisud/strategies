@@ -11,7 +11,7 @@ from os import path
 
 import csv
 import time
-from multiprocessing import Process
+from multiprocessing import Pool, Process
 import logging
 
 import pathhelper as ph
@@ -94,6 +94,21 @@ def child_process(list_slice, start, txt_dir, pdf_dir):
         __save_to_txt(url, txt_file, pdf_file)
         i = i + 1
 
+
+def child_process_in_pool(params):
+    """
+    different from func[child_process]
+    params contains:
+    row, txt_dir, pdf_dir, line_num->file_name(start with 0)
+    """
+    row, txt_dir, pdf_dir, line_num = params
+    code, title, url = row
+    file_name = str(line_num)
+    txt_file = path.join(txt_dir, file_name + ".txt")
+    pdf_file = path.join(pdf_dir, file_name + ".pdf")
+    __save_to_txt(url, txt_file, pdf_file)
+
+
 def process_csv_multiprocessing(csv_file, txt_dir, pdf_dir):
     if csv_file == "":
         csv_file = ph.get_csv_file_path()
@@ -146,6 +161,40 @@ def process_csv_multiprocessing(csv_file, txt_dir, pdf_dir):
 
     #end of with (open) as f
 
+
+
+def process_csv_multiprocessing_in_pool(csv_file, txt_dir, pdf_dir):
+    if csv_file == "":
+        csv_file = ph.get_csv_file_path()
+    if txt_dir == "":
+        txt_dir = ph.get_txt_directory()
+    if pdf_dir == "":
+        pdf_dir = ph.get_pdf_directory()
+
+    with open(csv_file, encoding="utf-8") as f:
+
+        file_rows = csv.reader(f)
+        list_rows = list(file_rows)
+        count = len(list_rows)
+        print(count)
+
+        params = []
+        for index, row in enumerate(list_rows):
+            params.append((row, txt_dir, pdf_dir, index))
+
+        #print(params)
+
+        pool = Pool()
+        pool.map(child_process_in_pool, params)
+        pool.close()
+        pool.join()
+
+        print("all done...")
+
+        #end of mutilprocessing
+
+    #end of with (open) as f
+
 def process_csv(csv_file, txt_dir, pdf_dir):
     if csv_file == "":
         csv_file = ph.get_csv_file_path()
@@ -172,17 +221,19 @@ def process_csv(csv_file, txt_dir, pdf_dir):
 
 
 if __name__ == "__main__":
-    time_begin = time.strftime("%Y-%m-%d %H:%M:%S")
-    print("time_begin:", time_begin)
+    time_begin_str = time.strftime("%Y-%m-%d %H:%M:%S")
+    print("time_begin:", time_begin_str)
+    time_begin = time.clock()
     print("******************************")
 
     #process_csv("", "", "")
-    process_csv("", "", "")
+    process_csv_multiprocessing_in_pool("", "", "")
 
-
-    time_end = time.strftime("%Y-%m-%d %H:%M:%S")
+    time_end_str = time.strftime("%Y-%m-%d %H:%M:%S")
     print("******************************")
-    print("time_end  :", time_end)
+    print("time_end  :", time_end_str)
+    time_end = time.clock()
+    print("time used is", time_end - time_begin)
 
 
 #end
