@@ -6,3 +6,6 @@ config done
 
 
 config git..
+
+
+config git ssh..
