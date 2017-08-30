@@ -12,3 +12,7 @@ config git ssh..
 
 
 config ok...finally...
+
+
+
+edited with atom
