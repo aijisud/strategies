@@ -50,5 +50,5 @@ git push origin
 
 echo "done" >> $logfile
 echo "done"
-exit(0)
+exit 0
 #end
