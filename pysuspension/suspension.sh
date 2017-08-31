@@ -34,8 +34,8 @@ then
 fi
 
 #github push
-cd $tragetdir
-echo $tragetdir
+cd $targetdir
+echo $targetdir
 git add $csvfile
 if [ $? -ne 0 ]
 then
