@@ -11,7 +11,7 @@ python $basedir/suspension.py >> $logfile
 
 cd $csvdir
 csvfile=`ls *.csv`
-if $? -ne 0;
+if $? -ne 0
 then
     exit(1)
 

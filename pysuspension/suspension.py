@@ -194,6 +194,8 @@ def extract_data(list_data):
 
 
 def do():
+    cwd = os.getcwd()
+    print("cwd is", cwd)
 
     print("[%s]%s" % (time.strftime("%Y%m%d %H%M%S"), "start to download..."))
     excel_file = download_excel()
@@ -201,7 +203,7 @@ def do():
     excel_date = excel_file.split("W0")[1][0:8]
     print("[%s]%s" % (time.strftime("%Y%m%d %H%M%S"), "strat to exctract data..."))
 
-    data_list = extract_data(parse_excel(excel_file))
+    data_list = extract_data(parse_excel(os.path.join(cwd, excel_file)))
     print("************************************************************************************************")
 
     csv_file = os.path.join(CSV_DIR, excel_date+".csv")
