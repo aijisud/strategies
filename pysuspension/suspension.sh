@@ -35,6 +35,7 @@ fi
 
 #github push
 cd $tragetdir
+echo $tragetdir
 git add $csvfile
 if [ $? -ne 0 ]
 then
