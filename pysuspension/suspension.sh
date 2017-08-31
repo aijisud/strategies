@@ -8,6 +8,7 @@ targetdir="$HOME/github/repositories/SuspensionWeekly"
 logfile="$HOME/workspace/log/$today.log"
 
 #save csv
+cd $basedir
 python $basedir/suspension.py >> $logfile
 
 cd $csvdir
