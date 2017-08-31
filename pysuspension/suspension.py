@@ -5,7 +5,6 @@
 直接打印筛选结果，并保存csv
 """
 
-
 import requests
 import re
 import os
@@ -64,7 +63,7 @@ def __download_excel():
     return excel_file
 
 
-def download_excel():
+def download_excel(target_dir):
     """
     解析结果，下载excel保存到对应目录
     """
@@ -78,12 +77,12 @@ def download_excel():
 
     if os.path.exists(download_file_name):
         os.remove(download_file_name)
-    if os.path.exists(os.path.join(CSV_DIR, download_file_name)):
-        os.remove(os.path.join(CSV_DIR, download_file_name))
+    if os.path.exists(os.path.join(target_dir, download_file_name)):
+        os.remove(os.path.join(target_dir, download_file_name))
 
     file_name = wget.download(excel_url)
-    shutil.move(file_name, CSV_DIR)
-    excel_file = os.path.join(CSV_DIR, file_name)
+    shutil.move(file_name, target_dir)
+    excel_file = os.path.join(target_dir, file_name)
     return excel_file
 
 
@@ -196,17 +195,18 @@ def extract_data(list_data):
 def do():
     cwd = os.getcwd()
     print("cwd is", cwd)
+    target_dir = os.path.join(cwd, CSV_DIR)
 
     print("[%s]%s" % (time.strftime("%Y%m%d %H%M%S"), "start to download..."))
-    excel_file = download_excel()
+    excel_file = download_excel(target_dir)
 
     excel_date = excel_file.split("W0")[1][0:8]
     print("[%s]%s" % (time.strftime("%Y%m%d %H%M%S"), "strat to exctract data..."))
 
-    data_list = extract_data(parse_excel(os.path.join(cwd, excel_file)))
+    data_list = extract_data(parse_excel(excel_file))
     print("************************************************************************************************")
 
-    csv_file = os.path.join(CSV_DIR, excel_date+".csv")
+    csv_file = os.path.join(target_dir, excel_date+".csv")
     with open( csv_file, "w", encoding="utf-8", newline="") as csv_file:
         csv_writer = csv.writer(csv_file)
         for data in data_list:
@@ -215,7 +215,7 @@ def do():
 
     print("************************************************************************************************")
 
-    print("[%s]%s" % (time.strftime("%Y%m%d %H%M%S"), "saved to csv and latest.csv"))
+    print("[%s]%s" % (time.strftime("%Y%m%d %H%M%S"), "saved to csv"))
 
 
 if __name__ == "__main__":
