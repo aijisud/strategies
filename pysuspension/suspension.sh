@@ -1,9 +1,8 @@
 #!/bin/sh
 today=`date +%Y%m%d`
-basedir="$HOME/github/pydisclosure/pysuspension"
-targetdir="$HOME/github/SuspensionWeekly"
-logdir="$HOME/workspace/stock/log"
-csvdir="$HOME/github/pydisclosure/pysuspension/data"
+basedir="$HOME/github/repositories/pydisclosure/pysuspension"
+targetdir="$HOME/github/repositories/SuspensionWeekly"
+csvdir="$HOME/github/repositories/pydisclosure/pysuspension/data"
 
 logfile="$HOME/workspace/stock/log/$today.log"
 
