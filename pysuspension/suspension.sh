@@ -16,6 +16,7 @@ csvfile=`ls *.csv`
 if $? -ne 0
 then
     exit 1
+fi
 
 echo csvfile >> $logfile
 
@@ -24,12 +25,13 @@ cp $csvdir/$csvfile $csvdir/latest.csv >> $logfile
 if $? -ne 0
 then
     exit 1
+fi
 
 mv $csvdir/*.csv $targetdir/ >> $logfile
 if $? -ne 0
 then
     exit 1
-
+fi
 
 #github push
 cd $tragetdir
@@ -37,7 +39,7 @@ git add $csvfile
 if $? -ne 0
 then
     exit 1
-
+fi
 
 git add latest.csv
 if $? -ne 0
