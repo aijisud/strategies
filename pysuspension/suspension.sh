@@ -11,10 +11,16 @@ python $basedir/suspension.py >> $logfile
 
 cd $csvdir
 csvfile=`ls *.csv`
+if $? -ne 0;
+then
+    exit(1)
+
+echo csvfile >> $logfile
 
 #mv csv
-cp $csvdir/$csvfile $csvdir/latest.csv
-mv $csvdir/*.csv $targetdir/
+cp $csvdir/$csvfile $csvdir/latest.csv >> $logfile
+mv $csvdir/*.csv $targetdir/ >> $logfile
+
 
 #github push
 cd $tragetdir
@@ -24,5 +30,6 @@ git commit -m "$csvdir"
 git push origin
 
 echo "done" >> $logfile
-
+echo "done"
+exit(0)
 #end
