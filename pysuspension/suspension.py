@@ -18,6 +18,8 @@ from datetime import datetime, date, timedelta
 import types
 import csv
 import time
+import shutil
+import wget
 
 CSV_DIR = "data"
 
@@ -46,9 +48,9 @@ def __get_excel_url():
     a = bs.find('a', attrs = { "href" : re.compile(".*xls") })
     return BASE_EXCEL_URL + a["href"]
 
-def download_excel():
+def __download_excel():
     """
-    解析结果，下载excel保存到对应目录
+    解析结果，通过urlretrieve下载excel保存到对应目录
     """
     s = requests.Session()
     r = s.get(URL_EXCEL, headers = headers)
@@ -59,6 +61,29 @@ def download_excel():
     file_name = excel_url.split("/")[-1]
     excel_file = os.path.join(CSV_DIR, file_name)
     urlretrieve(excel_url, excel_file)
+    return excel_file
+
+
+def download_excel():
+    """
+    解析结果，下载excel保存到对应目录
+    """
+    s = requests.Session()
+    r = s.get(URL_EXCEL, headers = headers)
+    bs = BeautifulSoup(r.content.decode("utf-8"), 'html.parser')
+    a = bs.find('a', attrs = { "href" : re.compile(".*xls") })
+    excel_url = BASE_EXCEL_URL + a["href"]
+
+    download_file_name = excel_url.split("/")[-1]
+
+    if os.path.exists(download_file_name):
+        os.remove(download_file_name)
+    if os.path.exists(os.path.join(CSV_DIR, download_file_name)):
+        os.remove(os.path.join(CSV_DIR, download_file_name))
+
+    file_name = wget.download(excel_url)
+    shutil.move(file_name, CSV_DIR)
+    excel_file = os.path.join(CSV_DIR, file_name)
     return excel_file
 
 
@@ -174,7 +199,6 @@ def do():
     excel_file = download_excel()
 
     excel_date = excel_file.split("W0")[1][0:8]
-
     print("[%s]%s" % (time.strftime("%Y%m%d %H%M%S"), "strat to exctract data..."))
 
     data_list = extract_data(parse_excel(excel_file))
