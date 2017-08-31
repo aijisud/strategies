@@ -40,24 +40,28 @@ if [ $? -ne 0 ]
 then
     exit 1
 fi
+echo "git added csv"
 
 git add latest.csv
 if [ $? -ne 0 ]
 then
     exit 1
 fi
+echo "git added latest.csv"
 
 git commit -m "$csvdir"
 if [ $? -ne 0 ]
 then
     exit 1
 fi
+echo "git commited"
 
 git push origin
 if [ $? -ne 0 ]
 then
     exit 1
 fi
+echo "git pushed"
 
 
 echo "done" >> $logfile
