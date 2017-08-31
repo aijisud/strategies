@@ -50,7 +50,7 @@ then
 fi
 echo "git added latest.csv"
 
-git commit -m "$csvdir"
+git commit -m "$today"
 if [ $? -ne 0 ]
 then
     exit 1
