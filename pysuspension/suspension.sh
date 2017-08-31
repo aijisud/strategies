@@ -1,10 +1,11 @@
 #!/bin/sh
 today=`date +%Y%m%d`
 basedir="$HOME/github/repositories/pydisclosure/pysuspension"
-targetdir="$HOME/github/repositories/SuspensionWeekly"
 csvdir="$HOME/github/repositories/pydisclosure/pysuspension/data"
 
-logfile="$HOME/workspace/stock/log/$today.log"
+targetdir="$HOME/github/repositories/SuspensionWeekly"
+
+logfile="$HOME/workspace/log/$today.log"
 
 #save csv
 python $basedir/suspension.py >> $logfile
@@ -20,15 +21,32 @@ echo csvfile >> $logfile
 
 #mv csv
 cp $csvdir/$csvfile $csvdir/latest.csv >> $logfile
+if $? -ne 0
+then
+    exit 1
+
 mv $csvdir/*.csv $targetdir/ >> $logfile
+if $? -ne 0
+then
+    exit 1
 
 
 #github push
 cd $tragetdir
 git add $csvfile
+if $? -ne 0
+then
+    exit 1
+
+
 git add latest.csv
+if $? -ne 0
+then
+    exit 1
+
 git commit -m "$csvdir"
 git push origin
+
 
 echo "done" >> $logfile
 echo "done"
