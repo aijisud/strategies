@@ -13,7 +13,7 @@ python $basedir/suspension.py >> $logfile
 cd $csvdir
 csvfile=`ls *.csv`
 
-if $? -ne 0
+if [ $? -ne 0 ]
 then
     exit 1
 fi
@@ -22,13 +22,13 @@ echo csvfile >> $logfile
 
 #mv csv
 cp $csvdir/$csvfile $csvdir/latest.csv >> $logfile
-if $? -ne 0
+if [ $? -ne 0 ]
 then
     exit 1
 fi
 
 mv $csvdir/*.csv $targetdir/ >> $logfile
-if $? -ne 0
+if [ $? -ne 0 ]
 then
     exit 1
 fi
@@ -36,19 +36,28 @@ fi
 #github push
 cd $tragetdir
 git add $csvfile
-if $? -ne 0
+if [ $? -ne 0 ]
 then
     exit 1
 fi
 
 git add latest.csv
-if $? -ne 0
+if [ $? -ne 0 ]
 then
     exit 1
 fi
 
 git commit -m "$csvdir"
+if [ $? -ne 0 ]
+then
+    exit 1
+fi
+
 git push origin
+if [ $? -ne 0 ]
+then
+    exit 1
+fi
 
 
 echo "done" >> $logfile
