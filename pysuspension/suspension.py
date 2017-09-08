@@ -32,8 +32,6 @@ headers = {
 FIRST_DAY = datetime.strptime("19000101", "%Y%m%d")
 
 
-
-
 """
 URL0 = "http://www.csrc.gov.cn/pub/zjhpublic/832/index_7401.htm"
 URL1 = "http://www.csrc.gov.cn/pub/zjhpublic/832/index_7401_1.htm"
@@ -97,19 +95,6 @@ def __parse_excel_example():
             print(item)
 
 
-def parse_excel(excel_file):
-    """
-    从excel文件中读取数据
-    """
-    data = xlrd.open_workbook(excel_file)
-    table = data.sheets()[0]
-    nrows = table.nrows #行数
-    l = []
-    for i in range(2, nrows - 2):
-        l.append(table.row_values(i))
-    return l
-
-
 """
 bug in excel
 1900/1/1  -- 1
@@ -122,6 +107,46 @@ bug in excel
 timedelta
 1900/1/1 + 1 = 1900/1/2
 """
+def parse_date_one(data):
+    """
+    解析单元格中日期
+    2017-1-18
+    或者读出来数字42860
+    """
+    reply_date = FIRST_DAY
+    if isinstance(data, str):
+        return data.replace("  ", " ").replace("\n", " ").strip()
+
+    if isinstance(data, float):
+        #一个日期被转为了数字
+        return FIRST_DAY + timedelta(int(data) - 2)
+
+    return reply_date
+
+
+def parse_date_two(data):
+    """
+    解析单元格中日期
+    2016-12-2 2017-1-18
+    或者读出来数字42860
+    """
+    date_0 = FIRST_DAY
+    date_1 = FIRST_DAY
+
+    if isinstance(data, str):
+        #多个日期
+        str_two = data.replace("  ", " ").replace("\n", " ")
+        if len(str_two) > 8:
+            #正确分析出是两个日期
+            date_0_str, date_1_str = str_two.split(" ")
+            date_0 = datetime.strptime(date_0_str, "%Y-%m-%d")
+            date_1 = datetime.strptime(date_1_str, "%Y-%m-%d")
+
+    if isinstance(data, float):
+        #一个日期被转为了数字
+        date_0 = FIRST_DAY + timedelta(int(data) - 2)
+
+    return [date_0, date_1]
 
 
 """
@@ -130,28 +155,140 @@ timedelta
 '反馈回复日期', '并购重组委会议日期', '审结日期', '备注', '独立财务顾问',
 '独立财务顾问主办人', '财务顾问', '财务顾问主办人', '律师事务所', '签字律师',
 '会计师事务所', '签字会计师', '资产评估机构/估值机构', '签字评估师/估值人员']
+
+[61.0, '上海电力', 600021.0, '上海电力', '发行股份购买资产',
+'正常审核', 42913.0, '', 42916.0, 42947.0, 42985.0,
+'', '', ' ', '国泰君安证券股份有限公司', '辛爽   寻国良',
+'无', '无', '北京 市中咨律师事务所', '贾向明叶蔓青', '信永中和会计师事务所（特殊普通合伙）',
+'郑卫军    廖志勇', '上海东洲资产评估有限公司', '吴元晨武钢']
+
 """
 
-def parse_date(data):
+def data_cleaning(r):
     """
-    解析单元格中日期
-    2016-12-2 2017-1-18
-    或者读出来数字42860
+    数据清洗
+    list --> list
+
     """
-    reply_date = FIRST_DAY
-    if isinstance(data, str):
-        #多个日期
-        str_2 = data.replace("  ", " ").replace("\n", " ")
-        if len(str_2) > 8:
-            #正确分析出是两个日期
-            temp, date_str = str_2.split(" ")
-            reply_date = datetime.strptime(date_str, "%Y-%m-%d")
 
-    if isinstance(data, float):
-        #一个日期被转为了数字
-        reply_date = FIRST_DAY + timedelta(int(data) - 2)
+    feedback_date_first, feedback_date_second = parse_date_two(r[9])
+    reply_date_first, reply_date_second = parse_date_two(r[10])
 
-    return reply_date
+    """
+    '序号', '上市公司简称', '股票代码',
+    '申请项目',
+    '接收日期',
+    '补正日期', '受理日期',
+
+    '首次反馈日期', '首次反馈回复',
+    '二次反馈日期', '二次反馈回复',
+
+    # -4 反馈回复日期, 近一周内
+    # -3 备注
+    # -2 并购重组委会议日期
+    # -1 审核类型
+    """
+
+    row = [
+            int(r[0]), \
+            r[1].replace("\n", "").strip(), \
+            str(int(r[2])) if isinstance(r[2], float) else r[2].strip(), \
+            r[4].replace("\n", "").strip(), \
+            parse_date_one(r[6]), \
+            FIRST_DAY if str(r[7]).strip() == "" else parse_date_one(r[7]), \
+            FIRST_DAY if str(r[8]).strip() == "" else parse_date_one(r[8]), \
+            feedback_date_first, \
+            reply_date_first, \
+            feedback_date_second, \
+            reply_date_second, \
+
+            reply_date_second if reply_date_second > reply_date_first else reply_date_first, \
+            r[13].replace("\n", "").strip(), \
+            str(r[11]).strip(), \
+            r[5].replace("\n", "").replace(" ", ""), \
+          ]
+
+    return row
+
+
+def parse_excel(excel_file):
+    """
+    从excel文件中读取数据
+    """
+    data = xlrd.open_workbook(excel_file)
+    table = data.sheets()[0]
+    nrows = table.nrows #行数
+    l = []
+    for i in range(3, nrows - 2):
+        #start with 3, exclude the headers
+        row = table.row_values(i)
+        l.append(data_cleaning(row))
+    return l
+
+
+"""
+'序号', '上市公司简称', '股票代码',
+'申请项目',
+'接收日期',
+'补正日期', '受理日期',
+
+'首次反馈日期', '首次反馈回复',
+'二次反馈日期', '二次反馈回复',
+
+# -4 反馈回复日期, 近一周内
+# -3 备注
+# -2 并购重组委会议日期
+# -1 审核类型
+"""
+
+"""
+def format_date(d):
+    return "-" if d.year == 1900 else d.strftime("%Y-%m-%d")
+"""
+
+def extract_data(list_data):
+    """
+    解析日期，筛选数据，格式化输出
+    """
+    csv_header =   ['序号', '上市公司简称', '股票代码', '申请项目', \
+                    '接收日期', '补正日期', '受理日期', \
+                    '首次反馈日期', '首次反馈回复', \
+                    '二次反馈日期', '二次反馈回复']
+
+    result_list = []
+    result_list.append(csv_header)
+
+    format_date = lambda d : "-" if d.year == 1900 else d.strftime("%Y-%m-%d")
+
+    for r in list_data:
+        #print(r[5])
+        # -1 审核类型
+        # -2 并购重组委会议日期
+        # -3 备注
+        # -4 反馈回复日期, 近一周内
+        #print(r)
+        if  r[-1] == "正常审核" \
+            and r[-2] == "" \
+            and r[-3] == "" \
+            and r[-4] + timedelta(20) > datetime.now() :
+
+            result_list.append([r[0], r[1], r[2], r[3], \
+                                format_date(r[4]), format_date(r[5]), format_date(r[6]), \
+                                format_date(r[7]), format_date(r[8]), format_date(r[9]), \
+                                format_date(r[10]),])
+            """
+            result_list.append([r[0], r[1], r[2], r[3], \
+                                "-" if r[4].year == 1900 else r[4].strftime("%Y-%m-%d"), \
+                                "-" if r[5].year == 1900 else r[5].strftime("%Y-%m-%d"), \
+                                "-" if r[6].year == 1900 else r[6].strftime("%Y-%m-%d"), \
+                                "-" if r[7].year == 1900 else r[7].strftime("%Y-%m-%d"), \
+                                "-" if r[8].year == 1900 else r[8].strftime("%Y-%m-%d"), \
+                                "-" if r[9].year == 1900 else r[9].strftime("%Y-%m-%d"), \
+                                "-" if r[10].year == 1900 else r[10].strftime("%Y-%m-%d"), \
+                                ])
+            """
+
+    return result_list
 
 
 def format_print(r):
@@ -168,30 +305,6 @@ def format_print(r):
         ]
 
 
-def extract_data(list_data):
-    """
-    解析日期，筛选数据，格式化输出
-    """
-    r = list_data[0]
-    result_list = []
-    result_list.append(
-            [r[0], r[1].replace("\n",""), r[2].replace("\n",""), r[3], \
-            r[4].replace("\n",""), r[5], r[6], r[7], r[8], r[9], r[10].replace("\n","")]
-            )
-    for r in list_data:
-        #print(r[5])
-        #审核类型
-        #并购重组委会议日期
-        #备注
-        #反馈回复日期, 近一周内
-        if r[5] == "正常审核" and r[11] == "" and r[13] == "" and r[10] != "":
-            reply_date = parse_date(r[10])
-            if reply_date > FIRST_DAY and reply_date + timedelta(20) > datetime.now():
-                result_list.append(format_print(r))
-
-    return result_list
-
-
 def do():
     cwd = os.getcwd()
     print("cwd is", cwd)
@@ -199,11 +312,15 @@ def do():
 
     print("[%s]%s" % (time.strftime("%Y%m%d %H%M%S"), "start to download..."))
     excel_file = download_excel(target_dir)
+    print("[%s]%s" % (time.strftime("%Y%m%d %H%M%S"), "downloaded..."))
 
     excel_date = excel_file.split("W0")[1][0:8]
     print("[%s]%s" % (time.strftime("%Y%m%d %H%M%S"), "strat to exctract data..."))
 
-    data_list = extract_data(parse_excel(excel_file))
+    cleaned_data = parse_excel(excel_file)
+
+    data_list = extract_data(cleaned_data)
+
     print("************************************************************************************************")
 
     csv_file = os.path.join(target_dir, excel_date+".csv")
