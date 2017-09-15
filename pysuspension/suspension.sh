@@ -19,10 +19,10 @@ then
     exit 1
 fi
 
-echo csvfile >> $logfile
+echo $csvfile >> $logfile
 
 #mv csv
-cp $csvdir/$csvfile $csvdir/latest.csv >> $logfile
+cp $csvfile latest.csv >> $logfile
 if [ $? -ne 0 ]
 then
     exit 1
