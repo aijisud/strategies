@@ -7,6 +7,10 @@ targetdir="$HOME/github/repositories/SuspensionWeekly"
 
 logfile="$HOME/workspace/log/$today.log"
 
+#delete existing csv files
+cd $csvdir
+rm *.csv
+
 #save csv
 cd $basedir
 python $basedir/suspension.py >> $logfile
