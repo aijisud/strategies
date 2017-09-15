@@ -222,7 +222,8 @@ def parse_excel(excel_file):
     for i in range(3, nrows - 2):
         #start with 3, exclude the headers
         row = table.row_values(i)
-        l.append(data_cleaning(row))
+        if isinstance(row[0], float) or isinstance(row[0], int):
+            l.append(data_cleaning(row))
     return l
 
 
