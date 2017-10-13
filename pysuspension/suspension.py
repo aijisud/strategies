@@ -136,11 +136,13 @@ def parse_date_two(data):
     if isinstance(data, str):
         #多个日期
         str_two = data.replace("  ", " ").replace("\n", " ")
-        if len(str_two) > 8:
+        if len(str_two) > 8 and str_two.find(" 20") > 0:
             #正确分析出是两个日期
             date_0_str, date_1_str = str_two.split(" ")
             date_0 = datetime.strptime(date_0_str, "%Y-%m-%d")
             date_1 = datetime.strptime(date_1_str, "%Y-%m-%d")
+        if str_two.find(" ") == -1:
+            date_0 = datetime.strptime(str_two, "%Y-%m-%d")
 
     if isinstance(data, float):
         #一个日期被转为了数字
