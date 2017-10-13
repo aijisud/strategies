@@ -141,7 +141,7 @@ def parse_date_two(data):
             date_0_str, date_1_str = str_two.split(" ")
             date_0 = datetime.strptime(date_0_str, "%Y-%m-%d")
             date_1 = datetime.strptime(date_1_str, "%Y-%m-%d")
-        if str_two.find(" ") == -1:
+        if str_two.find(" ") == -1 and str_two.count("-") == 2:
             date_0 = datetime.strptime(str_two, "%Y-%m-%d")
 
     if isinstance(data, float):
