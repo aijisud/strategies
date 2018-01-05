@@ -142,7 +142,10 @@ def parse_date_two(data):
             date_0 = datetime.strptime(date_0_str, "%Y-%m-%d")
             date_1 = datetime.strptime(date_1_str, "%Y-%m-%d")
         if str_two.find(" ") == -1 and str_two.count("-") == 2:
-            date_0 = datetime.strptime(str_two, "%Y-%m-%d")
+            try:
+                date_0 = datetime.strptime(str_two, "%Y-%m-%d")
+            except Exception as e:
+                pass
 
     if isinstance(data, float):
         #一个日期被转为了数字
