@@ -45,7 +45,6 @@ def check_dense():
     return True
 
 
-
 def loop_process():
     for stock_code in get_stocks():
         #print(stock_code)
