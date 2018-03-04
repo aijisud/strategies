@@ -102,3 +102,7 @@ ENV/
 
 # xls
 *.xls
+
+
+# self config
+/turningpoint/tusharedata/
