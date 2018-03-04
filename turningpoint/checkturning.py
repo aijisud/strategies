@@ -18,8 +18,6 @@ def get_recent_days():
     return []
 
 
-
-
 def get_stocks():
     rows = []
     with open('stocks.txt', encoding="utf-8-sig") as f:
