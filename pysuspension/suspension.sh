@@ -1,7 +1,7 @@
 #!/bin/sh
 today=`date +%Y%m%d`
-basedir="$HOME/github/repositories/pydisclosure/pysuspension"
-csvdir="$HOME/github/repositories/pydisclosure/pysuspension/data"
+basedir="$HOME/github/repositories/strategies/pysuspension"
+csvdir="$HOME/github/repositories/strategies/pysuspension/data"
 
 targetdir="$HOME/github/repositories/SuspensionWeekly"
 
