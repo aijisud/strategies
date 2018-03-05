@@ -1,8 +1,8 @@
 #!/bin/sh
 today=`date +%Y%m%d`
 
-basedir="$HOME/github/repositories/strategies/eftshares"
-filedir="$HOME/github/repositories/strategies/eftshares/data"
+basedir="$HOME/github/repositories/strategies/etfshares"
+filedir="$HOME/github/repositories/strategies/etfshares/data"
 targetdir="$HOME/github/repositories/ASharesData/ETFData"
 
 logfile="$HOME/workspace/log/$today.log"
