@@ -7,6 +7,8 @@ targetdir="$HOME/github/repositories/ASharesData/ETFData"
 
 logfile="$HOME/workspace/log/$today.log"
 
+#cd
+cd $basedir
 python $basedir/getszseetf.py >> $logfile
 
 mv $filedir/* $targetdir/ >> $logfile
