@@ -9,9 +9,20 @@ logfile="$HOME/workspace/log/$today.log"
 
 #cd
 cd $basedir
+echo "get etf start..."
 python $basedir/getszseetf.py >> $logfile
+echo "get etf done..."
+
+cd $filedir
+checkempty=`ls $filedir`
+if [ -z "$checkempty" ]
+then
+    echo "empty dir!"
+    exit 1
+fi
 
 mv $filedir/* $targetdir/ >> $logfile
+echo "mv done..."
 if [ $? -ne 0 ]
 then
     exit 1
