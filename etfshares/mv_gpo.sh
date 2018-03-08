@@ -8,16 +8,27 @@ targetdir="$HOME/github/repositories/ASharesData/ETFData"
 logfile="$HOME/workspace/log/$today.log"
 
 #cd
-cd $basedir
 echo "get etf start..."
+echo "get etf start..." >> $logfile
+
+cd $basedir
 python $basedir/getszseetf.py >> $logfile
+
+if [ $? -ne 0 ]
+then
+    echo "error in py"
+    echo "error in py" >> $logfile
+    exit 1
+fi
 echo "get etf done..."
+echo "get etf done..." >> $logfile
 
 cd $filedir
 checkempty=`ls $filedir`
 if [ -z "$checkempty" ]
 then
     echo "empty dir!"
+    echo "empty dir!" >> $logfile
     exit 1
 fi
 
