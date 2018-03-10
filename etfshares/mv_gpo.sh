@@ -7,6 +7,8 @@ targetdir="$HOME/github/repositories/ASharesData/ETFData"
 
 logfile="$HOME/workspace/log/$today.log"
 
+mailnotice_dir = "$HOME/workspace/mailnotice"
+
 #cd
 echo "get etf start..."
 echo "get etf start..." >> $logfile
@@ -18,6 +20,7 @@ if [ $? -ne 0 ]
 then
     echo "error in py"
     echo "error in py" >> $logfile
+    python $mail_dir/get_etf_error_notice.py
     exit 1
 fi
 echo "get etf done..."
