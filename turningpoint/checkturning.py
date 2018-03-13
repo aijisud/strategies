@@ -110,6 +110,8 @@ def loop_process():
     list_uptrend_40 = []
     list_uptrend_20 = []
     list_uptrend_5  = []
+    list_uptrend_2_alone = []
+    list_uptrend_1_alone = []
     for stock_code in list_stocks:
         ma20 = get_ma20(stock_code)
         if len(ma20) < 20:
@@ -126,16 +128,28 @@ def loop_process():
 
         if turning_days > 20 and turning_days < 40:
             list_uptrend_40.append(stock_code)
+
         if turning_days > 5:
             list_uptrend_20.append(stock_code)
+
         if turning_days > 0 and turning_days <= 5:
             list_uptrend_5.append(stock_code)
+
+        if turning_days > 1 and turning_days <= 2:
+            list_uptrend_2_alone.append(stock_code)
+
+        if turning_days > 0 and turning_days <= 1:
+            list_uptrend_1_alone.append(stock_code)
 
         #return
 
     print("****")
     print(" ".join(list_uptrend_5))
-
+    print("****")
+    print(" ".join(list_uptrend_2_alone))
+    print("****")
+    print(" ".join(list_uptrend_1_alone))
+    print("****")
 
 if __name__ == '__main__':
 
