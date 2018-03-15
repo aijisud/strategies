@@ -92,6 +92,44 @@ def get_full_year(year):
     print("done")
 
 
+
+def get_full_year_till_today(year):
+
+    today = time.strftime("%Y-%m-%d")
+
+    first = str(year) + "-01-01"
+    csv_content = []
+
+    file_name = os.path.join(cwd, "data", today + ".csv")
+    print(file_name)
+
+    i = 0
+    while i < 365:
+        stat_date = (datetime.strptime(first, "%Y-%m-%d") + timedelta(i)).strftime("%Y-%m-%d")
+        if stat_date[0:4] == str(int(year) + 1):
+            break
+        if stat_date == today:
+            break
+        try:
+            each_day = get_sse_etf(stat_date)
+        except Exception as e:
+            i = i
+            print(time.strftime("%Y-%m-%d %H:%M:%S"))
+            print(i)
+            print(str(e))
+            time.sleep(5 * 60)
+            continue
+        time.sleep(random.randint(5,10))
+        csv_content.extend(each_day)
+        i = i + 1
+        print(time.strftime("%Y-%m-%d %H:%M:%S"))
+        print(i)
+
+    save_to_csv(csv_content, file_name)
+    print("done")
+
+
+
 if __name__ == "__main__":
 
     """
@@ -106,7 +144,7 @@ if __name__ == "__main__":
         print(csv_content)
     """
 
-    get_full_year(2017)
+    get_full_year_till_today(2018)
 
 
 
