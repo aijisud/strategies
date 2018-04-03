@@ -15,7 +15,6 @@ today = time.strftime("%Y-%m-%d")
 start = datetime.strftime(datetime.now().date() - timedelta(DELTA), "%Y-%m-%d")
 
 
-
 cwd = os.getcwd()
 data_dir = path.join(cwd, "tusharedata", time.strftime("%Y%m%d"))
 
@@ -150,6 +149,15 @@ def loop_process():
     print("****")
     print(" ".join(list_uptrend_1_alone))
     print("****")
+
+
+def up_limit_recents(days):
+
+
+
+    pass
+
+
 
 if __name__ == '__main__':
 

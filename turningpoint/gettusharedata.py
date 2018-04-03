@@ -22,6 +22,29 @@ def get_stocks():
 list_stocks = get_stocks()
 
 
+
+def multiprocessing_in_pool():
+    with open(csv_file, encoding="utf-8") as f:
+
+        file_rows = csv.reader(f)
+        list_rows = list(file_rows)
+        count = len(list_rows)
+        print(count)
+
+        params = []
+        for index, row in enumerate(list_rows):
+            params.append((row, txt_dir, pdf_dir, index))
+
+        #print(params)
+
+        pool = Pool()
+        pool.map(child_process_in_pool, params)
+        pool.close()
+        pool.join()
+
+        print("all done...")
+
+
 def save_hist_data(stock_code):
     df = ts.get_hist_data(stock_code)
     csv_file = path.join(data_dir, stock_code + ".csv")
