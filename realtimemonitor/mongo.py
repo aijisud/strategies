@@ -24,7 +24,7 @@ class MongoConn(object):
         else:
             self.connected = True
 
-    def disconnect():
+    def disconnect(self):
         self.connected = False
         self.db.logout()
 
@@ -48,8 +48,8 @@ def main_test():
 
 
 if __name__ == '__main__':
-
-    main_test()
+    print("sss")
+    #main_test()
 
 
 #end
