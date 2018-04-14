@@ -2,8 +2,7 @@
 
 import tushare as ts
 import pandas as pd
-import os
-from os import path
+from os import path, makedirs, getcwd
 import time
 from datetime import datetime, date, timedelta
 
@@ -14,18 +13,18 @@ DELTA = 100
 today = time.strftime("%Y-%m-%d")
 start = datetime.strftime(datetime.now().date() - timedelta(DELTA), "%Y-%m-%d")
 
-
-cwd = os.getcwd()
+cwd = getcwd()
 data_dir = path.join(cwd, "tusharedata", time.strftime("%Y%m%d"))
+text_dir = path.join(cwd, "stocks.txt")
 
 
 def get_stocks():
     rows = []
-    with open('stocks.txt', encoding="utf-8-sig") as f:
+    with open(text_dir, encoding="utf-8-sig") as f:
         lines = f.readlines()
         for data in lines:
             rows.append(data[2:8].rstrip("\n"))
-    count = len(rows)
+    #count = len(rows)
     return rows
 
 list_stocks = get_stocks()

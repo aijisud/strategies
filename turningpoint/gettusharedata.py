@@ -2,53 +2,50 @@
 
 import time
 import tushare as ts
-import os
-from os import path
+from os import path, makedirs, getcwd
+from multiprocessing import Pool, Process
 
-
-cwd = os.getcwd()
+cwd = getcwd()
 data_dir = path.join(cwd, "tusharedata", time.strftime("%Y%m%d"))
+text_dir = path.join(cwd, "stocks.txt")
 
+
+if not path.exists(data_dir):
+    makedirs(data_dir)
 
 def get_stocks():
     rows = []
-    with open('stocks.txt', encoding="utf-8-sig") as f:
+    with open(text_dir, encoding="utf-8-sig") as f:
         lines = f.readlines()
         for data in lines:
             rows.append(data[2:8].rstrip("\n"))
-    count = len(rows)
+    #count = len(rows)
     return rows
 
 list_stocks = get_stocks()
 
 
+def child_process_in_pool(param):
+    pass
+
 
 def multiprocessing_in_pool():
-    with open(csv_file, encoding="utf-8") as f:
 
-        file_rows = csv.reader(f)
-        list_rows = list(file_rows)
-        count = len(list_rows)
-        print(count)
+    params = []
+    params = list_stocks.copy()
 
-        params = []
-        for index, row in enumerate(list_rows):
-            params.append((row, txt_dir, pdf_dir, index))
+    pool = Pool()
+    pool.map(save_hist_data, params)
+    pool.close()
+    pool.join()
 
-        #print(params)
-
-        pool = Pool()
-        pool.map(child_process_in_pool, params)
-        pool.close()
-        pool.join()
-
-        print("all done...")
+    print("all done...")
 
 
 def save_hist_data(stock_code):
     df = ts.get_hist_data(stock_code)
     csv_file = path.join(data_dir, stock_code + ".csv")
-    if os.path.exists(csv_file):
+    if path.exists(csv_file):
         print("%s exists" % stock_code)
         return
     if df is None:
@@ -57,6 +54,7 @@ def save_hist_data(stock_code):
     df.to_csv(csv_file)
     print("%s saved" % stock_code)
 
+
 def loop_process():
     for stock_code in list_stocks:
         save_hist_data(stock_code)
@@ -64,9 +62,9 @@ def loop_process():
 
 if __name__ == '__main__':
     #save_hist_data('002709')
-    loop_process()
 
-
+    multiprocessing_in_pool()
+    #loop_process()
 
 
 #end

@@ -8,6 +8,8 @@ import copy
 
 grtr = []
 less = []
+
+#十字星
 doji = []
 
 monitor_stocks = []
