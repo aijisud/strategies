@@ -64,7 +64,7 @@ if __name__ == '__main__':
     #save_hist_data('002709')
 
     multiprocessing_in_pool()
-    #loop_process()
+    loop_process()
 
 
 #end
