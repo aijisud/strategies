@@ -22,7 +22,7 @@ def query():
 
     collection = client["analysis"]["trend20180510230432"]
     #dbdata = collection.find({ "turningpoint": {"$in": [1,2,3,4,5]}, "uplimit.latest20": {"$eq": 2}, "uplimit.latest5": {"$eq": 0} })
-    dbdata = collection.find({ "turningpoint": {"$in": [1,2,3,4,5]}, "uplimit.latest30": {"$eq": 3}, "uplimit.latest5": {"$eq": 0} })
+    dbdata = collection.find({ "turningpoint": {"$in": [1,2,3,4,5,6,7,8,9]}, "uplimit.latest60": {"$gt": 3}, "uplimit.latest5": {"$eq": 0} })
     data = [ row["code"] for row in dbdata ]
     print(data)
     print(len(data))

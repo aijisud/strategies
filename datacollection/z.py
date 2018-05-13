@@ -21,6 +21,16 @@ class z(pymongo.MongoClient):
             return True
         return False
 
+    def clone(self, db_name, collection_name, newcollection_name):
+        if self.exists(db_name, collection_name):
+            #self.client[db_name][collection_name].rename(newcollection_name)
+            old = self.client[db_name][collection_name]
+            data = old.find({})
+            new = self.client[db_name][newcollection_name]
+            result = new.insert_many(data)
+            return True
+        return False
+
 
 if __name__ == '__main__':
     c = z()
