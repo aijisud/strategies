@@ -75,6 +75,7 @@ def bulk_insert_tushare_data():
         l = get_stock_list_lack()
         if len(l) == 0:
             print("len is 0")
+            break
         pool = Pool()
         pool.map(insert_tushare_data_of_one, l[:512])
         pool.close()
