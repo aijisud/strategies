@@ -32,6 +32,14 @@ if __name__ == '__main__':
     print("all done...")
 
 
+    print(time.time())
+    h.move_history()
+    print(time.time())
+    h.bulk_get_ma20_and_insert()
+    print(time.time())
+    print("all done...")
+
+
     i.query()
     print("all done...")
 
