@@ -4,7 +4,7 @@ import pymongo
 
 MONGO_URL = "127.0.0.1:27017"
 
-class z(pymongo.MongoClient):
+class dbclient(pymongo.MongoClient):
 
     def __init__(self, url = MONGO_URL):
         pymongo.MongoClient.__init__(self, url)
@@ -33,7 +33,7 @@ class z(pymongo.MongoClient):
 
 
 if __name__ == '__main__':
-    c = z()
+    c = dbclient()
     cc = c["analysis"]["turningpoint"]
     #print(c.get_all_collections("analysis"))
 

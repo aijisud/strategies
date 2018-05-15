@@ -57,7 +57,7 @@ def bulk_insert_tushare_data():
 if __name__ == '__main__':
 
     #bulk_insert_tushare_data()
-    print(get_stock_list_lack())
+    print("nothing to do...")
 
 
 #end
