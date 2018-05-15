@@ -5,6 +5,7 @@ import f_analysis_get_ma20 as f
 import g_analysis_turningpoint as g
 import h_turningpoint as h
 import i_query as i
+import time
 
 if __name__ == '__main__':
 
