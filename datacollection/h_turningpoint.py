@@ -37,7 +37,7 @@ def get_ma20_of_one(trend_data):
 
     turningpoint = -1
     if trend_data[0]["trend"] != "up":
-        turningpoint = 0
+        turningpoint = -1
 
     index = 0
     uplimit = {}

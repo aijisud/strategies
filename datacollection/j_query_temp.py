@@ -23,26 +23,34 @@ def query():
     collection = client["analysis"]["trend"]
 
     print("****************************************")
-    print("拐点2天内，涨停最近20天大于1个：")
-    dbdata = collection.find({ "turningpoint": {"$in": [0,1]}, "uplimit.latest20": {"$gt": 1} })
+    print("拐点今天：")
+    dbdata = collection.find({ "turningpoint": {"$in": [0]} })
     data = [ row["code"] for row in dbdata ]
     print(data)
     print("****************************************")
 
-    print("拐点5天内，涨停最近20天大于1个，最近5天没有：")
-    dbdata = collection.find({ "turningpoint": {"$in": [0,1,2,3,4,5]}, "uplimit.latest20": {"$gt": 1}, "uplimit.latest5": {"$eq": 0} })
+    print("****************************************")
+    print("拐点昨天：")
+    dbdata = collection.find({ "turningpoint": {"$in": [1]} })
     data = [ row["code"] for row in dbdata ]
     print(data)
     print("****************************************")
 
-    print("拐点5天内，涨停最近20天大于1个：")
-    dbdata = collection.find({ "turningpoint": {"$in": [0,1,2,3,4,5]}, "uplimit.latest20": {"$gt": 1}, "uplimit.latest5": {"$eq": 0} })
+    print("拐点4-6天内：")
+    dbdata = collection.find({ "turningpoint": {"$in": [4,5,6]} })
     data = [ row["code"] for row in dbdata ]
     print(data)
     print("****************************************")
 
-    print("拐点10天内，涨停最近60天大于2个，最近20天大于1个：")
-    dbdata = collection.find({ "turningpoint": {"$in": [0,1,2,3,4,5,6,7,8,9,10]}, "uplimit.latest60": {"$gt": 2}, "uplimit.latest20": {"$gt": 1} })
+    print("拐点4-6天内，涨停最近5天没有：")
+    dbdata = collection.find({ "turningpoint": {"$in": [4,5,6]}, "uplimit.latest5": {"$eq": 0} })
+    data = [ row["code"] for row in dbdata ]
+    print(data)
+    print("****************************************")
+
+    print("拐点4-6天内，涨停最近5天没有：")
+    dbdata = collection.find({ "turningpoint": {"$in": [4,5,6]}, "uplimit.latest5": {"$eq": 0} })
+    #dbdata = collection.find({ "turningpoint": {"$in": [4,5,6]}, "uplimit.latest20": {"$gt": 1}, "uplimit.latest5": {"$eq": 0} })
     data = [ row["code"] for row in dbdata ]
     print(data)
     print("****************************************")
