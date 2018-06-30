@@ -1,0 +1,85 @@
+# -*- coding: utf-8 -*-
+
+import pymongo
+import time
+
+mongo_url = "127.0.0.1:27017"
+client = pymongo.MongoClient(mongo_url)
+
+
+l = ["ma2020180613001204"
+,"ma2020180614010012"
+,"ma2020180615010330"
+,"ma2020180618215345"
+,"ma2020180620004947"
+,"ma2020180622130401"
+,"ma2020180626125702"
+,"ma2020180627003946"
+,"ma2020180628005744"
+,"ma2020180628234708"
+,"trend20180601015839"
+,"trend20180601233717"
+,"trend20180603200034"
+,"trend20180605003445"
+,"trend20180606191346"
+,"trend20180607234524"
+,"trend20180608225859"
+,"trend20180613001830"
+,"trend20180614010634"
+,"trend20180615011012"
+,"trend20180615014452"
+,"trend20180618220152"
+,"trend20180620005701"
+,"trend20180622130954"
+,"trend20180626130343"
+,"trend20180627004617"
+,"trend20180628010413"
+,"trend20180628235316"
+,"turningpoint20180601015555"
+,"turningpoint20180601233432"
+,"turningpoint20180603195721"
+,"turningpoint20180605003101"
+,"turningpoint20180606191053"
+,"turningpoint20180607234219"
+,"turningpoint20180608225454"
+,"turningpoint20180613001531"
+,"turningpoint20180614010336"
+,"turningpoint20180615010702"
+,"turningpoint20180618215828"
+,"turningpoint20180620005336"
+,"turningpoint20180622130708"
+,"turningpoint20180626130034"
+,"turningpoint20180627004315"
+,"turningpoint20180628010110"
+,"turningpoint20180628235023"
+]
+
+
+db = client["analysis"]
+
+for item in l:
+    db[item].drop()
+
+
+l = ["tusharekdata20180615005858"
+,"tusharekdata20180618214756"
+,"tusharekdata20180620004415"
+,"tusharekdata20180622125953"
+,"tusharekdata20180626125051"
+,"tusharekdata20180627003445"
+,"tusharekdata20180628005229"
+,"tusharekdata20180628234200"
+]
+
+db = client["stock"]
+
+for item in l:
+    db[item].drop()
+
+
+
+if __name__ == '__main__':
+    print("done...")
+
+
+#end
