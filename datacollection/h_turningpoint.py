@@ -97,7 +97,9 @@ def bulk_get_ma20_and_insert():
         k_data_group = []
         for code in code_list:
             k_data_one = [ item for item in k_data if item["code"] == code ]
-            k_data_group.append(k_data_one)
+            if k_data_one:
+                #如果不为空，插入
+                k_data_group.append(k_data_one)
 
         pool = Pool()
         result = pool.map(get_ma20_of_one, k_data_group)

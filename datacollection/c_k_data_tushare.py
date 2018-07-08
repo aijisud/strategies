@@ -9,6 +9,7 @@ from multiprocessing import Pool, Process
 mongo_url = "127.0.0.1:27017"
 client = pymongo.MongoClient(mongo_url)
 
+
 FIRST_DAY = "1990-12-19"
 today = time.strftime("%Y-%m-%d")
 

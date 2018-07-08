@@ -26,7 +26,7 @@ def update_some_valid_false():
 
 
 if __name__ == '__main__':
-    #update_market_and_valid()
+    update_market_and_valid()
     update_some_valid_false()
 
 #end
